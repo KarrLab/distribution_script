@@ -10,7 +10,7 @@ def init_query_pax():
     password = conf.MONGO_TEST_PASSWORD
     MongoDB = conf.SERVER
     pax_manager = query_pax.QueryPax(MongoDB=MongoDB, db=db,
-                 verbose=True, max_entries=20, username = username, password = password)
+                 verbose=True, username=username, password=password)
     return pax_manager
 
 def get_distinct_publications():
