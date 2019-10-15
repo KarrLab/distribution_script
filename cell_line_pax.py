@@ -50,9 +50,8 @@ def main():
     pax_manager = query_pax.QueryPax(MongoDB=MongoDB, db=db,
                  verbose=True, max_entries=20, username = username, password = password)
     publication = 'http://www.mcponline.org/cgi/doi/10.1074/mcp.M111.014050'
-    file_name = publication.replace('/', '_')
-    file_name = './' + file_name + '.csv'
-    
+    valid_name = publication.replace('/', '_')
+    valid_name = './' + valid_name + '.csv'
     files, _ = pax_manager.get_file_by_publication(publication, projection={'_id': 0, 'file_name': 1, 'observation': 1})
     file_name = []
     prev = {}
@@ -61,7 +60,7 @@ def main():
         cur = organize_observation(file['observation'], prev)
         prev = cur
     df = pd.DataFrame.from_dict(cur, orient='index', columns=file_name)
-    df.to_csv(file_name, header=True)
+    df.to_csv(valid_name, header=True)
 
 if __name__ == "__main__":
     main()
