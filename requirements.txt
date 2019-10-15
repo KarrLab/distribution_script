@@ -1,0 +1,2 @@
+datanator_query_python
+pandas
