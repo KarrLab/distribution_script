@@ -58,7 +58,7 @@ def main():
         cur = organize_observation(file['observation'], prev)
         prev = cur
     df = pd.DataFrame.from_dict(cur, orient='index', columns=file_name)
-    df.to_csv('~/karr_lab/10.1074.mcp.M111.014050.csv', header=True)
+    df.to_csv('~/10.1074.mcp.M111.014050.csv', header=True)
 
 if __name__ == "__main__":
     main()
