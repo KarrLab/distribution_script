@@ -29,3 +29,7 @@ class TestCellLinePax(unittest.TestCase):
                 'id_4': [None, None, 1.0], 'id_5': [None, None, 2.0], 'id_6': [None, None, 2.0]}
         result_2 = self.src.organize_observation(input_2, exp_1)
         self.assertEqual(exp_2, result_2)
+
+    def test_get_distinct_publications(self):
+        result = self.src.get_distinct_publications()
+        self.assertTrue('http://www.mcponline.org/cgi/doi/10.1074/mcp.M111.014050' in result)

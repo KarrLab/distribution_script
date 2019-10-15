@@ -3,6 +3,29 @@ from datanator_query_python.config import config as config_query
 import pandas as pd
 
 
+def init_query_pax():
+    db = 'datanator'
+    conf = config_query.TestConfig()
+    username = conf.MONGO_TEST_USERNAME
+    password = conf.MONGO_TEST_PASSWORD
+    MongoDB = conf.SERVER
+    pax_manager = query_pax.QueryPax(MongoDB=MongoDB, db=db,
+                 verbose=True, max_entries=20, username = username, password = password)
+    return pax_manager
+
+def get_distinct_publications():
+    """Get distinct publications in cell_line category in pax collection.
+
+    Returns:
+        (:obj:`list` of :obj:`str`): list of publications
+    """
+    manager = init_query_pax()
+    docs, _ = manager.get_file_by_organ('CELL_LINE', projection={'_id': 0, 'publication': 1})
+    publications = set()
+    for doc in docs:
+        publications.add(doc['publication'])
+    return list(publications)
+
 def organize_observation(observations, existing_dict):
     """reorganize observation 
     
@@ -40,27 +63,21 @@ def organize_observation(observations, existing_dict):
     return existing_dict 
 
 
-
 def main():
-    db = 'datanator'
-    conf = config_query.TestConfig()
-    username = conf.MONGO_TEST_USERNAME
-    password = conf.MONGO_TEST_PASSWORD
-    MongoDB = conf.SERVER
-    pax_manager = query_pax.QueryPax(MongoDB=MongoDB, db=db,
-                 verbose=True, max_entries=20, username = username, password = password)
-    publication = 'http://www.mcponline.org/cgi/doi/10.1074/mcp.M111.014050'
-    valid_name = publication.replace('/', '_')
-    valid_name = './' + valid_name + '.csv'
-    files, _ = pax_manager.get_file_by_publication(publication, projection={'_id': 0, 'file_name': 1, 'observation': 1})
-    file_name = []
-    prev = {}
-    for file in files:
-        file_name.append(file['file_name'])
-        cur = organize_observation(file['observation'], prev)
-        prev = cur
-    df = pd.DataFrame.from_dict(cur, orient='index', columns=file_name)
-    df.to_csv(valid_name, header=True)
+    pax_manager = init_query_pax()
+    publications = get_distinct_publications()
+    for publication in publications:
+        valid_name = publication.replace('/', '_')
+        valid_name = './' + valid_name + '.csv'
+        files, _ = pax_manager.get_file_by_publication(publication, projection={'_id': 0, 'file_name': 1, 'observation': 1})
+        file_name = []
+        prev = {}
+        for file in files:
+            file_name.append(file['file_name'])
+            cur = organize_observation(file['observation'], prev)
+            prev = cur
+        df = pd.DataFrame.from_dict(cur, orient='index', columns=file_name)
+        df.to_csv(valid_name, header=True)
 
 if __name__ == "__main__":
     main()
