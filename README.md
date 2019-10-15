@@ -1,6 +1,6 @@
 # distribution_script
 
-Scripts to generate publication-based protein abundance distribution data using "pax" collection in datanator MongoDB. Replace '_' with '/' in output file name to read source publications.
+Scripts to generate publication-based protein abundance distribution data using "pax" collection in datanator MongoDB. Replace '_' with '/' in output file name to read source publications. Requires karr_lab_build_config as ~/.wc
 
 ## Development team
 
